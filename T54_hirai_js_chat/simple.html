@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>チャットアプリ</title>
+    <style>
+        #output {
+            background: rgb(183, 202, 243);
+            height: 300px;
+            width: 500px;
+            overflow: scroll;
+        }
+
+        .msg:nth-child(odd) {
+            width: 40%;
+            background: rgb(124, 245, 124);
+            margin-left: auto;
+            border-radius: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .msg:nth-child(even) {
+            background: whitesmoke;
+            width: 40%;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        #text {
+            width: 80%;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        #uname {
+            border: 1px solid #ddd;
+        }
+        #send {
+            width: 20%;
+        }
+        .namae {
+            width: 500px;
+            text-align: center;
+        }
+        .text-area {
+            width: 500px;
+            height: 40px;
+            display: flex;
+        }
+        #remove {
+            width: 500px;
+            margin: 15px 0;
+            text-align: center;
+            background-color: gray;
+            color: #ddd;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- コンテンツ表示画面 -->
+
+<div>
+    <div id="output" style="overflow: auto; height: 500px;"></div>
+    <div class="namae"> 名前：<input type="text" id="uname"> </div>
+    <div class="text-area">
+        <textarea id="text" cols="30" rows="10"></textarea>
+        <button id="send">送信</button>
+    </div>
+    <div>
+        <button id="remove">すべて削除</button>
+    </div>
+</div>
+<!--/ コンテンツ表示画面 -->
+
+<!-- <div>
+    <div>名前：<input type="text" id="uname"> </div>
+    <div>
+        <textarea id="text" cols="30" rows="10"></textarea>
+        <button id="send">送信</button>
+    </div>
+    <div id="output"></div>
+</div> -->
+
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- JQuery -->
+
+
+<!--** 以下Firebase **-->
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+    import { getDatabase, ref, push, set, onChildAdded, remove,onChildRemoved } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "",
+        authDomain: "",
+        projectId: "",
+        storageBucket: "",
+        messagingSenderId: "",
+        appId: ""
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const dbRef = ref(db, 'dev245');
+
+     // 送信処理を記述
+    $('#send').on('click', function () {
+    // id="uname" の場所を取得します🤗
+    const uname = $('#uname').val();
+    console.log(uname, 'データの取得の仕方で表示が異なるのをチェックしましょう');
+
+    // id="text" の場所を取得します🤗
+    const text = $('#text').val();
+    console.log(text, 'データの取得の仕方で表示が異なるのをチェックしましょう');
+
+    // 取得できているか表示の確認をしましょう！
+    // これ必須！
+    $(function(){
+        $('#send').on('click',function(){
+            if($('#uname').val() === ''){
+                alert('名前を入力してください');
+            }
+        });
+    });
+    console.log(uname, text);
+
+    // データの塊を作ります🤗
+            // msg という名前で塊を作ります
+            // unameという鍵の名前
+            // textというカギの名前
+            // 作成したデータの塊をfirebaseに送信をします⇨つまりこれが保存になります🤗
+    const msg = {
+        uname: uname,
+        text: text,
+    }
+
+    // firebaseに送る準備をしていることになります🤗
+    const newPostRef = push(dbRef) //データを送信できる準備
+    set(newPostRef, msg); // firebaseの登録できる場所に保存するイメージです🤗
+
+    // 送信後に入力欄を空にする
+    $('#uname').val("");
+    $('#text').val("");
+
+    // これを使うとどうなるか
+    $("#uname").focus();
+
+    // send送信イベント この下消さない
+    });
+
+
+
+    // 受信処理を記述
+    onChildAdded(dbRef, function (data) {
+
+    // ここからが受信処理が始まります
+
+    // 登録されたデータを取得します🤗
+    const msg = data.val();
+    console.log(msg, '取得したデータの塊')
+    const key = data.key;
+    console.log(key, 'データの塊にアクセス')
+
+    // es6のテンプレートリテラル
+    let h = `
+    <div class="msg">
+        <p>${msg.uname}</p>
+        <p>${msg.text}</p>
+    </div>
+    `;
+
+    // htmlに埋め込む
+    // append();というjqueryのおまじないを使います
+    $("#output").append(h);
+    const output = document.getElementById('output');
+    output.scrollTo(0, output.scrollHeight);
+
+    });
+
+    // 削除機能
+    $(function(){
+        $('#remove').click(function(){
+            $('.msg').remove();
+        });
+    });
+
+
+
+    // この間に書いていく
+</script>
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
