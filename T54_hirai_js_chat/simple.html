@@ -62,7 +62,10 @@
 <!-- コンテンツ表示画面 -->
 
 <div>
-    <div id="output" style="overflow: auto; height: 500px;"></div>
+    <div>
+        <div id="output" style="overflow: auto; height: 500px;"></div>
+        <div id="time"></div>
+    </div>
     <div class="namae"> 名前：<input type="text" id="uname"> </div>
     <div class="text-area">
         <textarea id="text" cols="30" rows="10"></textarea>
@@ -72,16 +75,9 @@
         <button id="remove">すべて削除</button>
     </div>
 </div>
+
 <!--/ コンテンツ表示画面 -->
 
-<!-- <div>
-    <div>名前：<input type="text" id="uname"> </div>
-    <div>
-        <textarea id="text" cols="30" rows="10"></textarea>
-        <button id="send">送信</button>
-    </div>
-    <div id="output"></div>
-</div> -->
 
 <!-- JQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -91,19 +87,19 @@
 <!--** 以下Firebase **-->
 <script type="module">
     // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
-    import { getDatabase, ref, push, set, onChildAdded, remove,onChildRemoved } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+    import { getDatabase, ref, push, set, onChildAdded, remove,onChildRemoved } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
-        apiKey: "",
-        authDomain: "",
-        projectId: "",
-        storageBucket: "",
-        messagingSenderId: "",
-        appId: ""
+    apiKey: "AIzaSyDzRz91OYI7Gde9m-8peTUw1DaMcInisD8",
+    authDomain: "dev245-31f48.firebaseapp.com",
+    projectId: "dev245-31f48",
+    storageBucket: "dev245-31f48.appspot.com",
+    messagingSenderId: "133324329085",
+    appId: "1:133324329085:web:49985da1ab23a0ad4be114"
     };
 
     // Initialize Firebase
@@ -130,7 +126,7 @@
             }
         });
     });
-    console.log(uname, text);
+    console.log(uname, text,);
 
     // データの塊を作ります🤗
             // msg という名前で塊を作ります
@@ -183,6 +179,12 @@
     const output = document.getElementById('output');
     output.scrollTo(0, output.scrollHeight);
 
+    });
+
+    // 時間の取得
+    $(function(){
+        var datetime = new Date();
+        $('#time').html(datetime);
     });
 
     // 削除機能
